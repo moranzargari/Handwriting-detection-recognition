@@ -1,2 +1,2 @@
-# Handwriting-detection-recognition
+# Handwriting detection & recognition
 final project 
