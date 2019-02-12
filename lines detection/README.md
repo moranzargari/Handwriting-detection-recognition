@@ -10,5 +10,5 @@ During the search we found many solutions to the problem and finally we decided 
 
 Also we wrote our own algorithm called "sumPixels".
 In order to find out who is the best algorithm, we have defined a statistical measure that examines the four algorithms (we use the images collection folder).
-and found out that our algorithm is the best, and we use it to detect the lines in our project.
+After the comparison we found out that our algorithm is the best, so we decided to use we it to detect the lines in our project.
 (the code file and the csv files is in "lines detection/statistic" folder)
