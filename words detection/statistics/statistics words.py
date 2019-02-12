@@ -41,7 +41,7 @@ print (sum(dict_data['contours'])/sum(dict_data['num of words']))
 font = {'color': 'darkred', 'size': '12', 'family': 'serif'}
 
 ############################################################################# algo score 1
-algorithms = ['Sum Pixels words (ours algorithm)', 'Find Contours']
+algorithms = ['Sum Pixels words', 'Dynamic Dilation']
 y_pos = np.arange(len(algorithms))
 avgs = [sum_pixels_rate, contours_rate]
 
@@ -53,7 +53,7 @@ plt.title('Statistics')
 plt.show()
 
 ############################################################################# algo score 2
-algorithms = ['Sum Pixels words (ours algorithm)', 'Find Contours']
+algorithms = ['Sum Pixels words', 'Dynamic Dilation']
 y_pos = np.arange(len(algorithms))
 avgs = [sum(dict_data['sumpixels'])/sum(dict_data['num of words']),sum(dict_data['contours'])/sum(dict_data['num of words'])]
 
@@ -63,4 +63,3 @@ plt.ylabel('Algorithm Score', fontdict=font)
 plt.xlabel('Algorithm', fontdict=font)
 plt.title('Statistics')
 plt.show()
-
