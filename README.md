@@ -23,3 +23,4 @@ The two parts will be wrapped in a user interface, as a result we will get an ea
 ## Project stages
 
 1. [lines detection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/lines%20detection)
+2. words detection
