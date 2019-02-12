@@ -22,16 +22,4 @@ The two parts will be wrapped in a user interface, as a result we will get an ea
 
 ## Project stages
 
-**1. lines detection:**
-<br/>
-We first examined in literature what algorithms are used today to separate the lines in an image containing handwritten text.
-During the search we found many solutions to the problem and finally we decided focus on the three most common algorithms we've seen.
-(in "lines detection" folder)
-* FindConturs
-* MSER
-* Lines
-
-Also we wrote our own algorithm called "sumPixels".
-In order to find out who is the best algorithm, we have defined a statistical measure that examines the four algorithms.
-and found out that our algorithm is the best, and we use it to detect the lines in our project.
-(in "lines detection/statistic" folder)
+**1. lines detection**
