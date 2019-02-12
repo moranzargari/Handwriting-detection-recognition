@@ -29,7 +29,8 @@ During the search we found many solutions to the problem and finally we decided 
 (in "lines detection" folder)
 * FindConturs
 * MSER
-* Lines <br/>
+* Lines
+<br/>
 Also we wrote our own algorithm called "sumPixels".
 In order to find out who is the best algorithm, we have defined a statistical measure that examines the four algorithms.
 and found out that our algorithm is the best, and we use it to detect the lines in our project.
