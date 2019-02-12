@@ -1,6 +1,7 @@
 # Handwriting detection & recognition
-## Final project - software engineering fourth year
-###### This appliction is being developed as part of 4th year final project at the software engeneering department at Azrieli College of Engineering, jerusalem, Israel.
+###### This appliction is being developed as part of 4th year final project at the software engeneering department at [Azrieli College of Engineering, jerusalem, Israel](https://english.jce.ac.il/).
+
+
 
 
 Despite the computer revolution in recent years, much information has been written in handwriting all over the world today as well.
