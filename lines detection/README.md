@@ -6,7 +6,7 @@ During the search we found many solutions to the problem and finally we decided 
 
 * FindConturs
 * MSER
-* Lines
+* Reduce
 
 Also we wrote our own algorithm called "sumPixels".
 In order to find out who is the best algorithm, we have defined a statistical measure that examines the four algorithms (we use the images collection folder).
