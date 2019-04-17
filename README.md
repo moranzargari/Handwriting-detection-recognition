@@ -24,4 +24,4 @@ The two parts will be wrapped in a user interface, as a result we will get an ea
 
 1. [lines detection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/lines%20detection)
 2. [words detection](https://github.com/moranzargari/Handwriting-detection-recognition/blob/master/words%20detection)
-3. [build letters dataset](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Letters%20Dataset%20Collection)
+3. [Letters Dataset Collection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Letters%20Dataset%20Collection)
