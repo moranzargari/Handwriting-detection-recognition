@@ -7,7 +7,7 @@
 
 Despite the computer revolution in recent years, much information has been written in handwriting all over the world today as well.
 Manual writing is still common among institutions, companies and organizations as well as personal needs of individuals
-Such as writing summaries, drafts, notes, notes, and more.
+such as writing summaries, drafts, notes, notes, and more.
 
 The research around this subject has been developing in recent years, but the results are still only partial. There is a need to detect people's handwriting and convert it into computerized text in order to enable the ability to organize and share the various documents, as well as to make various changes and manipulations of the text easily.
 
