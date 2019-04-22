@@ -8,5 +8,5 @@ First, we conducted a thorough search for Hebrew alphabet on the network, and al
 * Create a page containing 270 slots - used as a designated place to fill 10 samples of each letter - (total of 27 letters in Hebrew) - you can view the format [here](https://github.com/moranzargari/Handwriting-detection-recognition/blob/master/Letters%20Dataset%20Collection/page.jpg?raw=true)
 * Distribute the page to people to get as many different types of handwriting as possible from the language.
 * Scan all full pages -  [Link to scanned pages](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Letters%20Dataset%20Collection/tables)
-* Writing a program in Python that knows how to extract the letters written to a desired format from the page - [Python code](Letters Dataset Collection/lettersCuter.py)
+* Writing a program in Python that knows how to extract the letters written to a desired format from the page - [Python code](https://github.com/moranzargari/Handwriting-detection-recognition/blob/master/Letters%20Dataset%20Collection/lettersCuter.py)
 * We received a letter dataset when each letter is a letter of size X pixels and from each letter we have Y performances - a link to the letters folders
