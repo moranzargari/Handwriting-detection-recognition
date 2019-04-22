@@ -3,27 +3,27 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-##################################################ALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+##################################################
 
 
-image = cv2.imread('kaki/TABLES/2.jpg')    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-table_name = 2
+image = cv2.imread('k/TABLES/50.jpg')    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+table_name = 50
 
-##################################################ALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-
-
+##################################################
 
 
-cv2.imshow('table_orig', image)
-cv2.waitKey(0)
+
+
+# cv2.imshow('table_orig', image)
+# cv2.waitKey(0)
 
 gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-cv2.imshow('gray',gray)
-cv2.waitKey(0)
+# cv2.imshow('gray',gray)
+# cv2.waitKey(0)
 
 ret,thresh = cv2.threshold(gray, 109, 255, cv2.THRESH_BINARY_INV)
-cv2.imshow('thresh',thresh)
-cv2.waitKey(0)
+# cv2.imshow('thresh',thresh)
+# cv2.waitKey(0)
 
 im2, ctrs, hier = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -49,13 +49,16 @@ for i, ctr in enumerate(sorted_ctrs):
       W = int(w*0.13)
 
       letter = roi[H:h - H , W:w - W]
-
+      letter = cv2.resize(letter, (28,28))
       if curr_folder!= counter//10 +1:
          name_num = 0
-      cv2.imwrite("kaki/"+str(counter//10 +1)+"/"+str(name_num)+"_"+str(table_name)+ ".png", letter)
+      cv2.imwrite("k/"+str(counter//10 +1)+"/"+str(name_num)+"_"+str(table_name)+ ".png", letter)
       curr_folder = counter//10 +1
       name_num+=1
       counter+=1
 
 cv2.imshow('marked areas',image)
 cv2.waitKey(0)
+
+# cv2.imwrite("k/alo.png", image)
+
