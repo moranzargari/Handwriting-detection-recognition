@@ -59,6 +59,3 @@ for i, ctr in enumerate(sorted_ctrs):
 
 cv2.imshow('marked areas',image)
 cv2.waitKey(0)
-
-# cv2.imwrite("kaki/alo.png", image)
-
