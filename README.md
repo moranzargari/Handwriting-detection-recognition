@@ -27,3 +27,4 @@ The two parts will be wrapped in a user interface, as a result we will get an ea
 ### Dataset stage
 3. [Letters Dataset Collection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Letters%20Dataset%20Collection)
 ### Recognition stage
+4. Neural Network
