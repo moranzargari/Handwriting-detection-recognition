@@ -64,22 +64,22 @@ classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['
 train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-training_set = train_datagen.flow_from_directory('dataset1/train', target_size=(28, 28), batch_size=30, class_mode='categorical')
+training_set = train_datagen.flow_from_directory('dataset/train', target_size=(28, 28), batch_size=30, class_mode='categorical')
 
-test_set = test_datagen.flow_from_directory('dataset1/test', target_size=(28, 28), batch_size=30, class_mode='categorical')
+test_set = test_datagen.flow_from_directory('dataset/test', target_size=(28, 28), batch_size=30, class_mode='categorical')
 
-validation_set = test_datagen.flow_from_directory('dataset1/validation', target_size=(28, 28), batch_size=30, class_mode='categorical')
+validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(28, 28), batch_size=30, class_mode='categorical')
 
 
 # now lets train our neural network
-classifier.fit_generator(training_set, epochs=2, validation_data=validation_set, steps_per_epoch=13770/30, validation_steps=4618/30)
+classifier.fit_generator(training_set, epochs=2, validation_data=validation_set, steps_per_epoch=13770/30, validation_steps=4590/30)
 
 
 
 
 
 # Making New Predictions - lets try to predict a letter
-test_image = image.load_img('dataset1/test/15/4.png', target_size=(28, 28))
+test_image = image.load_img('dataset/test/16/271.png', target_size=(28, 28))
 test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis=0)
 result = classifier.predict(test_image)
@@ -89,6 +89,7 @@ letters = ['א','ב','ג','ד','ה','ו','ז','ח','ט','י','כ','ל','מ','נ'
 for i,predict in enumerate(result[0]):
     if predict == 1:
         prediction = letters[i]
+        break
 else:
     prediction = 'none'
 
