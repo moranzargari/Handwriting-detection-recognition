@@ -7,25 +7,25 @@ from keras.layers import Dense
 
 # ignore warning
 import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-
-#Part 2
+# Part 2
 from keras.preprocessing.image import ImageDataGenerator
 
-
-#predictions
+# predictions
 import numpy as np
 from keras.preprocessing import image
 
-
+num_of_classes = 27
+image_size = 28  # 28X28 pixels
 
 # Initializing the CNN
 classifier = Sequential()
 
 # Step 1 - Convolution
-#input layer
-classifier.add(Convolution2D(filters=64, kernel_size=3, input_shape=(28, 28, 3), activation='relu'))
+# input layer
+classifier.add(Convolution2D(filters=64, kernel_size=3, input_shape=(image_size, image_size, 3), activation='relu'))
 
 # Step 2 - Pooling
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
@@ -42,8 +42,7 @@ classifier.add(Flatten())
 # add first hidden layer
 classifier.add(Dense(units=128, activation="relu"))
 # Output layer
-classifier.add(Dense(units=27, activation="softmax"))
-
+classifier.add(Dense(units=num_of_classes, activation="softmax"))
 
 ################# Compiling the CNN #################
 """
@@ -58,35 +57,43 @@ To make things even easier to interpret, we will use the ‘accuracy’ metric t
 """
 classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-
 # Part 2 : Fitting the CNN to the images
+
+num_of_epochs = 20
+train_size = 13770
+test_size = 4590
+batch_Size = 60
+
 # the batch_size is similar to k-fold , we choose k batches when k<num of samples and the NN train each k samples each time
 train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-training_set = train_datagen.flow_from_directory('dataset/train', target_size=(28, 28), batch_size=30, class_mode='categorical')
+training_set = train_datagen.flow_from_directory('dataset/train', target_size=(image_size, image_size),
+                                                 batch_size=batch_Size,
+                                                 class_mode='categorical')
 
-test_set = test_datagen.flow_from_directory('dataset/test', target_size=(28, 28), batch_size=30, class_mode='categorical')
+test_set = test_datagen.flow_from_directory('dataset/test', target_size=(image_size, image_size), batch_size=batch_Size,
+                                            class_mode='categorical')
 
-validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(28, 28), batch_size=30, class_mode='categorical')
-
+validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(image_size, image_size),
+                                                  batch_size=batch_Size,
+                                                  class_mode='categorical')
 
 # now lets train our neural network
-classifier.fit_generator(training_set, epochs=2, validation_data=validation_set, steps_per_epoch=13770/30, validation_steps=4590/30)
-
-
-
-
+classifier.fit_generator(training_set, epochs=num_of_epochs, validation_data=validation_set,
+                         steps_per_epoch=train_size / batch_Size,
+                         validation_steps=test_size / batch_Size)
 
 # Making New Predictions - lets try to predict a letter
-test_image = image.load_img('dataset/test/16/271.png', target_size=(28, 28))
+test_image = image.load_img('dataset/test/16/271.png', target_size=(image_size, image_size))
 test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis=0)
 result = classifier.predict(test_image)
 training_set.class_indices
 
-letters = ['א','ב','ג','ד','ה','ו','ז','ח','ט','י','כ','ל','מ','נ','ס','ע','פ','צ','ק','ר','ש','ת','ך','ם','ן','ף','ץ']
-for i,predict in enumerate(result[0]):
+letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
+           'ך', 'ם', 'ן', 'ף', 'ץ']
+for i, predict in enumerate(result[0]):
     if predict == 1:
         prediction = letters[i]
         break
