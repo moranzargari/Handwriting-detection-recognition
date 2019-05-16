@@ -4,9 +4,10 @@ from keras.layers import Convolution2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
-
+import  pandas as pd
 # ignore warning
 import os
+import cv2
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -25,7 +26,7 @@ classifier = Sequential()
 
 # Step 1 - Convolution
 # input layer
-classifier.add(Convolution2D(filters=64, kernel_size=3, input_shape=(image_size, image_size, 3), activation='relu'))
+classifier.add(Convolution2D(filters=32, kernel_size=3, input_shape=(image_size, image_size, 3), activation='relu'))
 
 # Step 2 - Pooling
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
@@ -38,9 +39,12 @@ classifier.add(MaxPooling2D(pool_size=(2, 2)))
 # Step 3 - Flattening
 classifier.add(Flatten())
 
+
 # Step 4 - Full Connection
 # add first hidden layer
 classifier.add(Dense(units=128, activation="relu"))
+# classifier.add(Dense(units=27, activation="relu"))
+
 # Output layer
 classifier.add(Dense(units=num_of_classes, activation="softmax"))
 
@@ -59,10 +63,10 @@ classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['
 
 # Part 2 : Fitting the CNN to the images
 
-num_of_epochs = 20
+num_of_epochs = 10
 train_size = 13770
 test_size = 4590
-batch_Size = 60
+batch_Size = 20
 
 # the batch_size is similar to k-fold , we choose k batches when k<num of samples and the NN train each k samples each time
 train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
@@ -84,20 +88,58 @@ classifier.fit_generator(training_set, epochs=num_of_epochs, validation_data=val
                          steps_per_epoch=train_size / batch_Size,
                          validation_steps=test_size / batch_Size)
 
-# Making New Predictions - lets try to predict a letter
-test_image = image.load_img('dataset/test/16/271.png', target_size=(image_size, image_size))
-test_image = image.img_to_array(test_image)
-test_image = np.expand_dims(test_image, axis=0)
-result = classifier.predict(test_image)
-training_set.class_indices
+#Making New Predictions - lets try to predict a letter
 
-letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
-           'ך', 'ם', 'ן', 'ף', 'ץ']
-for i, predict in enumerate(result[0]):
-    if predict == 1:
-        prediction = letters[i]
-        break
-else:
-    prediction = 'none'
+ot = 1
+test_set.reset()
+images = []
+for filename in os.listdir("dataset/test/"+str(ot)):
+    img = cv2.imread(os.path.join("dataset/test/"+str(ot), filename))
+    if img is not None:
+        images.append(img)
 
-print(prediction)
+
+
+count=0
+for img in images:
+
+    test_image = img
+    test_image = image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis=0)
+    result = classifier.predict(test_image)
+    training_set.class_indices
+
+    letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
+               'ך', 'ם', 'ן', 'ף', 'ץ']
+    for i, predict in enumerate(result[0]):
+        if predict == 1:
+            prediction = i
+            break
+    else:
+        prediction = 'none'
+    print(prediction)
+    if prediction == ot-1:
+       count+=1
+
+print("count:         "+str(count))
+
+
+
+loss, acc = classifier.evaluate_generator(test_set,steps=batch_Size)
+print("loss:"+ str(loss)+"  ,acc: "+str(acc))
+
+
+# test_set.reset()
+# test_pred = classifier.predict_generator(test_set, batch_Size)
+#
+#
+# predicted_class_indices = np.argmax(test_pred, axis=1)
+# labels = (training_set.class_indices)
+# labels = dict((v,k) for k,v in labels.items())
+# predictions = [labels[k] for k in predicted_class_indices]
+#
+# filnames = test_set.filenames
+
+
+# results = pd.DataFrame({"filename": filnames, "predictions": predictions})
+# results.to_csv("results.csv", index=False)
