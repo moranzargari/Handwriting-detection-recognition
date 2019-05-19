@@ -19,6 +19,7 @@ This project is an initiative of the students Itay Hefetz and Moran Zargari and 
 The project will be divided into two main parts: detection and recognition.
 The two parts will be wrapped in a user interface, as a result we will get an easy-to-use computer program that will recognize the user's handwriting from an image and convert it to typed text.
 
+[view our board](https://trello.com/b/e8GFkCYN/handwriting-recognition)
 
 ## Project stages
 ### Detection stage
