@@ -20,129 +20,140 @@ from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 from keras.preprocessing import image
 
-num_of_classes = 27
-image_size = 28  # 28X28 pixels
 
-# Initializing the CNN
-classifier = Sequential()
-
-# Step 1 - Convolution
-# input layer
-classifier.add(Convolution2D(filters=32, kernel_size=3, input_shape=(image_size, image_size, 3), activation='relu'))
-
-# Step 2 - Pooling
-classifier.add(MaxPooling2D(pool_size=(2, 2)))
-
-# # To increase Efficiency, add another Convolutional layer
-# classifier.add(Convolution2D(filters=32, kernel_size=3, activation='relu'))
-#
-# classifier.add(MaxPooling2D(pool_size=(2, 2)))
-
-# Step 3 - Flattening
-classifier.add(Flatten())
+def run_model(num_of_epochs, train_size, test_size, batch_Size, model_number):
 
 
-# Step 4 - Full Connection
-# add first hidden layer
-classifier.add(Dense(units=128, activation="relu"))
-classifier.add(Dropout(0.2))
-classifier.add(Dense(units=64, activation="relu"))
-classifier.add(Dropout(0.2))
+    num_of_classes = 27
+    image_size = 28  # 28X28 pixels
 
-# Output layer
-classifier.add(Dense(units=num_of_classes, activation="softmax"))
+    # Initializing the CNN
+    classifier = Sequential()
 
-################# Compiling the CNN #################
-"""
-we need to compile our model. Compiling the model takes three parameters: optimizer, loss and metrics.
-The optimizer controls the learning rate. We will be using ‘adam’ as our optmizer. Adam is generally a good optimizer to use for many cases.
-The adam optimizer adjusts the learning rate throughout training.
-The learning rate determines how fast the optimal weights for the model are calculated.
-A smaller learning rate may lead to more accurate weights (up to a certain point), but the time it takes to compute the weights will be longer.
-We will use ‘categorical_crossentropy’ for our loss function. This is the most common choice for classification.
-A lower score indicates that the model is performing better.
-To make things even easier to interpret, we will use the ‘accuracy’ metric to see the accuracy score on the validation set when we train the model.
-"""
-classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    # Step 1 - Convolution
+    # input layer
+    classifier.add(Convolution2D(filters=32, kernel_size=3, input_shape=(image_size, image_size, 3), activation='relu'))
 
-# Part 2 : Fitting the CNN to the images
+    # Step 2 - Pooling
+    classifier.add(MaxPooling2D(pool_size=(2, 2)))
 
-num_of_epochs = 20
-train_size = 82620
-test_size = 27540
-batch_Size = 128
+    # # To increase Efficiency, add another Convolutional layer
+    # classifier.add(Convolution2D(filters=32, kernel_size=3, activation='relu'))
+    #
+    # classifier.add(MaxPooling2D(pool_size=(2, 2)))
 
-# the batch_size is similar to k-fold , we choose k batches when k<num of samples and the NN train each k samples each time
-train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
-test_datagen = ImageDataGenerator(rescale=1. / 255)
-
-training_set = train_datagen.flow_from_directory('dataset/train', target_size=(image_size, image_size),
-                                                 batch_size=batch_Size,
-                                                 class_mode='categorical')
-
-test_set = test_datagen.flow_from_directory('dataset/test', target_size=(image_size, image_size), batch_size=batch_Size,
-                                            class_mode='categorical')
-
-validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(image_size, image_size),
-                                                  batch_size=batch_Size,
-                                                  class_mode='categorical')
-
-# now lets train our neural network
-classifier.fit_generator(training_set, epochs=num_of_epochs, validation_data=validation_set,
-                         steps_per_epoch=train_size / batch_Size,
-                         validation_steps=test_size / batch_Size)
+    # Step 3 - Flattening
+    classifier.add(Flatten())
 
 
+    # Step 4 - Full Connection
+    # add first hidden layer
+    classifier.add(Dense(units=128, activation="relu"))
+    classifier.add(Dropout(0.2))
+    classifier.add(Dense(units=64, activation="relu"))
+    classifier.add(Dropout(0.2))
 
-# save train to Json
-model_json = classifier.to_json()
-with open("model.json", "w") as json_file:
-   json_file.write(model_json)
-# serialize weights to HDF5
-classifier.save_weights("model.h5")
-print("Saved model to disk")
+    # Output layer
+    classifier.add(Dense(units=num_of_classes, activation="softmax"))
 
+    ################# Compiling the CNN #################
+    """
+    we need to compile our model. Compiling the model takes three parameters: optimizer, loss and metrics.
+    The optimizer controls the learning rate. We will be using ‘adam’ as our optmizer. Adam is generally a good optimizer to use for many cases.
+    The adam optimizer adjusts the learning rate throughout training.
+    The learning rate determines how fast the optimal weights for the model are calculated.
+    A smaller learning rate may lead to more accurate weights (up to a certain point), but the time it takes to compute the weights will be longer.
+    We will use ‘categorical_crossentropy’ for our loss function. This is the most common choice for classification.
+    A lower score indicates that the model is performing better.
+    To make things even easier to interpret, we will use the ‘accuracy’ metric to see the accuracy score on the validation set when we train the model.
+    """
+    classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-#Making New Predictions - lets try to predict a letter
+    # Part 2 : Fitting the CNN to the images
 
-ot = '17'
-test_set.reset()
-images = []
-for filename in os.listdir("dataset/test/"+str(ot)):
-    img = cv2.imread(os.path.join("dataset/test/"+str(ot), filename))
-    if img is not None:
-        images.append(img)
+    # num_of_epochs = 20
+    # train_size = 82620
+    # test_size = 27540
+    # batch_Size = 128
+
+    # the batch_size is similar to k-fold , we choose k batches when k<num of samples and the NN train each k samples each time
+    train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
+    test_datagen = ImageDataGenerator(rescale=1. / 255)
+
+    training_set = train_datagen.flow_from_directory('dataset/train', target_size=(image_size, image_size),
+                                                     batch_size=batch_Size,
+                                                     class_mode='categorical')
+
+    test_set = test_datagen.flow_from_directory('dataset/test', target_size=(image_size, image_size), batch_size=batch_Size,
+                                                class_mode='categorical')
+
+    validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(image_size, image_size),
+                                                      batch_size=batch_Size,
+                                                      class_mode='categorical')
+
+    # now lets train our neural network
+    classifier.fit_generator(training_set, epochs=num_of_epochs, validation_data=validation_set,
+                             steps_per_epoch=train_size / batch_Size,
+                             validation_steps=test_size / batch_Size)
 
 
 
+    # save train to Json
+    model_json = classifier.to_json()
+    with open("model"+str(model_number)+".json","w") as json_file:
+       json_file.write(model_json)
+    # serialize weights to HDF5
+    classifier.save_weights("model"+str(model_number)+".h5")
+    print("Saved model to disk")
 
-count=0
-for img in images:
 
-    test_image = img
-    test_image = image.img_to_array(test_image)
-    test_image = np.expand_dims(test_image, axis=0)
-    result = classifier.predict(test_image)
-    training_set.class_indices
+    #Making New Predictions - lets try to predict a letter
 
-    letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
-               'ך', 'ם', 'ן', 'ף', 'ץ']
-    for i, predict in enumerate(result[0]):
-        if predict == 1:
-            prediction = i
-            break
-    else:
-        prediction = 'none'
-    print(prediction)
-    if prediction == 16:
-       count+=1
-
-print("count:         "+str(count))
+    ot = '17'
+    test_set.reset()
+    images = []
+    for filename in os.listdir("dataset/test/"+str(ot)):
+        img = cv2.imread(os.path.join("dataset/test/"+str(ot), filename))
+        if img is not None:
+            images.append(img)
 
 
 
-loss, acc = classifier.evaluate_generator(test_set,steps=batch_Size)
-print("loss:"+ str(loss)+"  ,acc: "+str(acc))
+
+    count=0
+    for img in images:
+
+        test_image = img
+        test_image = image.img_to_array(test_image)
+        test_image = np.expand_dims(test_image, axis=0)
+        result = classifier.predict(test_image)
+        training_set.class_indices
+
+        letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
+                   'ך', 'ם', 'ן', 'ף', 'ץ']
+        for i, predict in enumerate(result[0]):
+            if predict == 1:
+                prediction = i
+                break
+        else:
+            prediction = 'none'
+        if prediction == 'none':
+            print(prediction)
+        else:
+            print(letters[prediction])
+        if prediction == 10:
+            count += 1
+
+    print("recognize:" + str(count) + "/1020")
+
+
+
+    loss, acc = classifier.evaluate_generator(test_set,steps=batch_Size)
+    print("loss:"+ str(loss)+"  ,acc: "+str(acc))
+
+
+
+
 
 
 # test_set.reset()
