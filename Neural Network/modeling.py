@@ -4,6 +4,8 @@ from keras.layers import Convolution2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
+from keras.layers import Dropout
+from keras.models import model_from_json
 import  pandas as pd
 # ignore warning
 import os
@@ -43,7 +45,9 @@ classifier.add(Flatten())
 # Step 4 - Full Connection
 # add first hidden layer
 classifier.add(Dense(units=128, activation="relu"))
-# classifier.add(Dense(units=27, activation="relu"))
+classifier.add(Dropout(0.2))
+classifier.add(Dense(units=64, activation="relu"))
+classifier.add(Dropout(0.2))
 
 # Output layer
 classifier.add(Dense(units=num_of_classes, activation="softmax"))
@@ -63,10 +67,10 @@ classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['
 
 # Part 2 : Fitting the CNN to the images
 
-num_of_epochs = 10
-train_size = 13770
-test_size = 4590
-batch_Size = 20
+num_of_epochs = 20
+train_size = 82620
+test_size = 27540
+batch_Size = 128
 
 # the batch_size is similar to k-fold , we choose k batches when k<num of samples and the NN train each k samples each time
 train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
@@ -88,15 +92,27 @@ classifier.fit_generator(training_set, epochs=num_of_epochs, validation_data=val
                          steps_per_epoch=train_size / batch_Size,
                          validation_steps=test_size / batch_Size)
 
+
+
+# save train to Json
+model_json = classifier.to_json()
+with open("model.json", "w") as json_file:
+   json_file.write(model_json)
+# serialize weights to HDF5
+classifier.save_weights("model.h5")
+print("Saved model to disk")
+
+
 #Making New Predictions - lets try to predict a letter
 
-ot = 1
+ot = '17'
 test_set.reset()
 images = []
 for filename in os.listdir("dataset/test/"+str(ot)):
     img = cv2.imread(os.path.join("dataset/test/"+str(ot), filename))
     if img is not None:
         images.append(img)
+
 
 
 
@@ -118,7 +134,7 @@ for img in images:
     else:
         prediction = 'none'
     print(prediction)
-    if prediction == ot-1:
+    if prediction == 16:
        count+=1
 
 print("count:         "+str(count))
