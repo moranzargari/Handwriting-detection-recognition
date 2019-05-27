@@ -21,7 +21,7 @@ import numpy as np
 from keras.preprocessing import image
 
 
-def run_model(num_of_epochs, train_size, test_size, batch_Size, model_number):
+def run_model(num_of_epochs, train_size, test_size, batch_Size, filters, dropout,kernel, model_number):
 
 
     num_of_classes = 27
@@ -32,7 +32,7 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, model_number):
 
     # Step 1 - Convolution
     # input layer
-    classifier.add(Convolution2D(filters=32, kernel_size=3, input_shape=(image_size, image_size, 3), activation='relu'))
+    classifier.add(Convolution2D(filters=filters, kernel_size=kernel, input_shape=(image_size, image_size, 1), activation='relu'))
 
     # Step 2 - Pooling
     classifier.add(MaxPooling2D(pool_size=(2, 2)))
@@ -47,11 +47,22 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, model_number):
 
 
     # Step 4 - Full Connection
-    # add first hidden layer
+    # add hidden layers
+
+    classifier.add(Dense(units=1024, activation="relu"))
+    classifier.add(Dropout(dropout))
+
+    classifier.add(Dense(units=512, activation="relu"))
+    classifier.add(Dropout(dropout))
+
+    classifier.add(Dense(units=256, activation="relu"))
+    classifier.add(Dropout(dropout))
+
     classifier.add(Dense(units=128, activation="relu"))
-    classifier.add(Dropout(0.2))
-    classifier.add(Dense(units=64, activation="relu"))
-    classifier.add(Dropout(0.2))
+    classifier.add(Dropout(dropout))
+    # classifier.add(Dense(units=64, activation="relu"))
+    # classifier.add(Dropout(dropout))
+
 
     # Output layer
     classifier.add(Dense(units=num_of_classes, activation="softmax"))
@@ -80,21 +91,21 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, model_number):
     train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-    training_set = train_datagen.flow_from_directory('dataset/train', target_size=(image_size, image_size),
+    training_set = train_datagen.flow_from_directory('dataset/train', target_size=(image_size, image_size), color_mode= "grayscale",
                                                      batch_size=batch_Size,
                                                      class_mode='categorical')
 
-    test_set = test_datagen.flow_from_directory('dataset/test', target_size=(image_size, image_size), batch_size=batch_Size,
+    test_set = test_datagen.flow_from_directory('dataset/test', target_size=(image_size, image_size), color_mode= "grayscale", batch_size=batch_Size,
                                                 class_mode='categorical')
 
-    validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(image_size, image_size),
+    validation_set = test_datagen.flow_from_directory('dataset/validation', target_size=(image_size, image_size), color_mode= "grayscale",
                                                       batch_size=batch_Size,
                                                       class_mode='categorical')
 
     # now lets train our neural network
     classifier.fit_generator(training_set, epochs=num_of_epochs, validation_data=validation_set,
                              steps_per_epoch=train_size / batch_Size,
-                             validation_steps=test_size / batch_Size)
+                             validation_steps=test_size / batch_Size,)
 
 
 
@@ -106,67 +117,5 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, model_number):
     classifier.save_weights("model"+str(model_number)+".h5")
     print("Saved model to disk")
 
-
-    #Making New Predictions - lets try to predict a letter
-
-    ot = '17'
-    test_set.reset()
-    images = []
-    for filename in os.listdir("dataset/test/"+str(ot)):
-        img = cv2.imread(os.path.join("dataset/test/"+str(ot), filename))
-        if img is not None:
-            images.append(img)
-
-
-
-
-    count=0
-    for img in images:
-
-        test_image = img
-        test_image = image.img_to_array(test_image)
-        test_image = np.expand_dims(test_image, axis=0)
-        result = classifier.predict(test_image)
-        training_set.class_indices
-
-        letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
-                   'ך', 'ם', 'ן', 'ף', 'ץ']
-        for i, predict in enumerate(result[0]):
-            if predict == 1:
-                prediction = i
-                break
-        else:
-            prediction = 'none'
-        if prediction == 'none':
-            print(prediction)
-        else:
-            print(letters[prediction])
-        if prediction == 10:
-            count += 1
-
-    print("recognize:" + str(count) + "/1020")
-
-
-
     loss, acc = classifier.evaluate_generator(test_set,steps=batch_Size)
     print("loss:"+ str(loss)+"  ,acc: "+str(acc))
-
-
-
-
-
-
-# test_set.reset()
-# test_pred = classifier.predict_generator(test_set, batch_Size)
-#
-#
-# predicted_class_indices = np.argmax(test_pred, axis=1)
-# labels = (training_set.class_indices)
-# labels = dict((v,k) for k,v in labels.items())
-# predictions = [labels[k] for k in predicted_class_indices]
-#
-# filnames = test_set.filenames
-
-
-# results = pd.DataFrame({"filename": filnames, "predictions": predictions})
-# results.to_csv("results.csv", index=False)
