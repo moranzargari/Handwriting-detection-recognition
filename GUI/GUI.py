@@ -2,6 +2,9 @@ from tkinter import *
 import tkinter as tk
 from tkinter import Tk, Text, BOTH, W, N, E, S
 from tkinter.ttk import Frame, Button, Label, Style
+from tkinter import Label, Tk
+from PIL import Image, ImageTk
+from tkinter import filedialog
 
 
 
@@ -49,8 +52,8 @@ class Example(Frame):
         right_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
 
-        cbtn = Button(right_frame, text="בחר תמונה")
-        cbtn.grid(row=1, column=7, pady=0, padx= 50)
+        browse = Button(right_frame, text="בחר תמונה")
+        browse.grid(row=1, column=7, pady=0, padx= 50)
 
         cbtn = Button(right_frame, text="בצע המרה")
         cbtn.grid(row=2, column=5, pady=0)
@@ -58,8 +61,15 @@ class Example(Frame):
         cbtn = Button(right_frame, text="ביטול")
         cbtn.grid(row=7, column=5, pady=50)
 
+        def hello(event):
+            path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg')])
+            im = Image.open(path)
+            tkimage = ImageTk.PhotoImage(im)
+            myvar = Label(right_frame, image=tkimage)
+            myvar.image = tkimage
+            myvar.pack()
 
-
+        browse.bind('<Button-1>',hello)
 
         # self.columnconfigure(1, weight=1)
         # self.columnconfigure(3, pad=7)
