@@ -20,7 +20,6 @@ from tkinter.ttk import Frame, Button, Label, Style
 
 class Example(Frame):
 
-    kaki = "jhjhjhjhjh"
     def __init__(self):
         super().__init__()
 
@@ -42,6 +41,8 @@ class Example(Frame):
         cbtn = Button(left_frame, text="TXT שמור כקובץ ")
         cbtn.grid(row=7, column=0, pady=4)
 
+
+
     ########################################################################
 
         right_frame = tk.Frame(self.master, bg='gray')
@@ -49,11 +50,13 @@ class Example(Frame):
 
 
         cbtn = Button(right_frame, text="בחר תמונה")
-        cbtn.grid(row=1, column=7, pady=0)
+        cbtn.grid(row=1, column=7, pady=0, padx= 50)
 
         cbtn = Button(right_frame, text="בצע המרה")
         cbtn.grid(row=2, column=5, pady=0)
 
+        cbtn = Button(right_frame, text="ביטול")
+        cbtn.grid(row=7, column=5, pady=50)
 
 
 
