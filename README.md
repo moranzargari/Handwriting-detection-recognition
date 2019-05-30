@@ -23,9 +23,11 @@ The two parts will be wrapped in a user interface, as a result we will get an ea
 
 ## Project stages
 ### Detection stage
-1. [lines detection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/lines%20detection)
-2. [words detection](https://github.com/moranzargari/Handwriting-detection-recognition/blob/master/words%20detection)
+* [lines detection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/lines%20detection)
+* [words detection](https://github.com/moranzargari/Handwriting-detection-recognition/blob/master/words%20detection)
 ### Dataset stage
-3. [Letters Dataset Collection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Letters%20Dataset%20Collection)
+* [Letters Dataset Collection](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Letters%20Dataset%20Collection)
 ### Recognition stage
-4. [Neural Network](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Neural%20Network)
+* [Neural Network](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Neural%20Network)
+### User Interface
+* [GUI] ()
