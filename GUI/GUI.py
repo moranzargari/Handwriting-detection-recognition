@@ -32,44 +32,47 @@ class Example(Frame):
 
 
         left_frame = tk.Frame(self.master, bg='lightsteelblue')
-        left_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+        left_frame.grid(row=0, column=0, sticky="nsew")
 
         lbl = tk.Label(left_frame, text=": פלט (טקסט מוקלד)", bg="lightsteelblue")
         lbl.grid(sticky=E, pady=4, padx=5)
 
         area = Text(left_frame, height=40)
         # area.insert(tk.END,"alooooooooooooooooooooooo")
-        area.grid(row=5, column=0, sticky=W+S+N)
+        area.grid(row=5, column=0, sticky=S+N, padx=55, pady=35)
 
         cbtn = Button(left_frame, text="TXT שמור כקובץ ")
-        cbtn.grid(row=7, column=0, pady=4)
+        cbtn.grid(row=7, column=0, pady=1)
 
 
 
     ########################################################################
 
         right_frame = tk.Frame(self.master, bg='gray')
-        right_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+        right_frame.grid(row=0, column=1, sticky="nsew")
 
-
+        self.master.grid_columnconfigure(0, weight=1, uniform="group1")
+        self.master.grid_columnconfigure(1, weight=1, uniform="group1")
+        self.master.grid_rowconfigure(0, weight=1)
         browse = Button(right_frame, text="בחר תמונה")
-        browse.grid(row=1, column=7, pady=0, padx= 50)
+        browse.place(relx=1, x=-7, y=12, anchor=NE)
 
         cbtn = Button(right_frame, text="בצע המרה")
-        cbtn.grid(row=2, column=5, pady=0)
+        cbtn.place(relx=1, x=-87, y=12, anchor=NE)
 
         cbtn = Button(right_frame, text="ביטול")
-        cbtn.grid(row=7, column=5, pady=50)
+        cbtn.place(relx=1, x=-167, y=12, anchor=NE)
 
         def hello(event):
             path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg')])
             im = Image.open(path)
+            im = im.resize((500, 500), Image.ANTIALIAS)
             tkimage = ImageTk.PhotoImage(im)
             myvar = Label(right_frame, image=tkimage)
             myvar.image = tkimage
-            myvar.pack()
+            myvar.place(relx=.5, rely=.5, anchor="center")
 
-        browse.bind('<Button-1>',hello)
+        browse.bind('<Button-1>', hello)
 
         # self.columnconfigure(1, weight=1)
         # self.columnconfigure(3, pad=7)
@@ -99,10 +102,11 @@ def main():
     # # x and y are the coordinates of the upper left corner
     # w = 1000
     # h = 700
-    # x = 150
-    # y = 50
+    x = 150
+    y = 50
     # # use width x height + x_offset + y_offset (no spaces!)
-    # root.geometry("%dx%d+%d+%d" % (w, h, x, y))
+    # root.geometry(('{}x{}').format(w, h))
+
 
     # frame = tk.Frame(root, bg='lightsteelblue')
     # frame.pack(fill='both', expand=True)
