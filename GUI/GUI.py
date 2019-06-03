@@ -8,84 +8,155 @@ from PIL import Image, ImageTk
 from tkinter import filedialog
 
 
-class Program(Frame):
-
-    def __init__(self):
-        super().__init__()
-        self.guiView()
 
 
-    def guiView(self):
+# blank window
+root = Tk()
+# this will be the title of the window
+root.title("Hebrew Handwriting Recognition")
 
-        lbl_output = tk.Label(self.master, text=": פלט (טקסט מוקלד)", bg="white", font=("david", 16))
-        lbl_output.place(x=700, y=60, anchor=NE)
-
-        area = Text(self.master, height=30.1, width=67, font='david')
-        # area.insert(tk.END,"alooooooooooooooooooooooo")
-        area.place(x =400, y =400, anchor="center")
-
-        save_btn = Button(self.master, text="TXT שמור כקובץ ")
-        save_btn.place(x=430, y=720, anchor=NE)
-
-        close_btn = Button(self.master, text="סגור", command=self.master.destroy)
-        close_btn.place(x=100, y=800, anchor=NE)
-
-
-    ########################################################################
-
-
-        #init - adding an example image
-        im = Image.open("Untitled.jpg")
-        im = im.resize((600, 600), Image.ANTIALIAS)
-        tkimage = ImageTk.PhotoImage(im)
-        myvar = Label(self.master, image=tkimage)
-        myvar.image = tkimage
-        myvar.place(relx=.5, x=400, y=400, anchor="center")
-
-
-        browse_btn = Button(self.master, text="בחר תמונה שברצונך להמיר")
-        browse_btn.place(relx=1, x=-300, y=60, anchor=NE)
-
-        convert_btn = Button(self.master, text="בצע המרה", state="disable")
-        convert_btn.place(relx=1, x=-250, y=720, anchor=NE)
-
-
-        # add functionality to the view
-        browse_btn.bind('<Button-1>', self.hello)
-
-
-    def hello(self, event=None):
-        path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg'), ("PNG File", '.png'), ("TIF File", '.TIF'), ("JPEG File", '.jpeg')])
-        im = Image.open(path)
-        im = im.resize((600, 600), Image.ANTIALIAS)
-        tkimage = ImageTk.PhotoImage(im)
-        myvar = Label(self.master, image=tkimage)
-        myvar.image = tkimage
-        myvar.place(relx=.5, x=400, y=400, anchor="center")
-        self.area.insert(tk.END,"alooooooooooooooooooooooo")
+root.state('zoomed')
+root.resizable(False, False)
 
 
 
+lbl_output = tk.Label(root, text=": פלט (טקסט מוקלד)", bg="white", font=("david", 16))
+lbl_output.place(x=700, y=60, anchor=NE)
+
+area = Text(root, height=30.1, width=67, font='david')
+# area.insert(tk.END,"alooooooooooooooooooooooo")
+area.place(x =400, y =400, anchor="center")
+
+save_btn = Button(root, text="TXT שמור כקובץ ")
+save_btn.place(x=430, y=720, anchor=NE)
+
+close_btn = Button(root, text="סגור", command=root.destroy)
+close_btn.place(x=100, y=800, anchor=NE)
+
+convert_btn = Button(root, text="בצע המרה", state="disable")
+convert_btn.place(relx=1, x=-250, y=720, anchor=NE)
 
 
 
-def main():
+def add_image_to_convert(img):
+    im = img.resize((600, 600), Image.ANTIALIAS)
+    tkimage = ImageTk.PhotoImage(im)
+    myvar = Label(root, image=tkimage)
+    myvar.image = tkimage
+    myvar.place(relx=.5, x=400, y=400, anchor="center")
 
-    # blank window
-    root = Tk()
-    # this will be the title of the window
-    root.title("Hebrew Handwriting Recognition")
-
-    root.state('zoomed')
-    root.resizable(False, False)
-    program = Program()
-
-    # this is for kiping the window open until we press exit (X)
-    root.mainloop()
+#init - adding an example image for instructions
+img = Image.open("Untitled.jpg")
+add_image_to_convert(img)
 
 
-if __name__ == '__main__':
-    main()
+
+def hello():
+    path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg'), ("PNG File", '.png'), ("TIF File", '.TIF'), ("JPEG File", '.jpeg')])
+    img = Image.open(path)
+    add_image_to_convert(img)
+    convert_btn['state'] = "enable"
+
+
+
+browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=hello)
+browse_btn.place(relx=1, x=-300, y=60, anchor=NE)
+
+root.mainloop()
+
+
+
+# def button_convert()
+#
+#
+#
+# class Program(Frame):
+#
+#     def __init__(self):
+#         super().__init__()
+#         self.guiView()
+#
+#
+#     def guiView(self):
+#
+#         lbl_output = tk.Label(self.master, text=": פלט (טקסט מוקלד)", bg="white", font=("david", 16))
+#         lbl_output.place(x=700, y=60, anchor=NE)
+#
+#         area = Text(self.master, height=30.1, width=67, font='david')
+#         # area.insert(tk.END,"alooooooooooooooooooooooo")
+#         area.place(x =400, y =400, anchor="center")
+#
+#         save_btn = Button(self.master, text="TXT שמור כקובץ ")
+#         save_btn.place(x=430, y=720, anchor=NE)
+#
+#         close_btn = Button(self.master, text="סגור", command=self.master.destroy)
+#         close_btn.place(x=100, y=800, anchor=NE)
+#
+#
+#     ########################################################################
+#
+#
+#         #init - adding an example image
+#         im = Image.open("Untitled.jpg")
+#         im = im.resize((600, 600), Image.ANTIALIAS)
+#         tkimage = ImageTk.PhotoImage(im)
+#         myvar = Label(self.master, image=tkimage)
+#         myvar.image = tkimage
+#         myvar.place(relx=.5, x=400, y=400, anchor="center")
+#
+#
+#         browse_btn = Button(self.master, text="בחר תמונה שברצונך להמיר")
+#         browse_btn.place(relx=1, x=-300, y=60, anchor=NE)
+#
+#         convert_btn = Button(self.master, text="בצע המרה", state="disable")
+#         convert_btn.place(relx=1, x=-250, y=720, anchor=NE)
+#
+#
+#         # add functionality to the view
+#         browse_btn.bind('<Button-1>', self.hello)
+#
+#
+#     def hello(self, event=None):
+#         path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg'), ("PNG File", '.png'), ("TIF File", '.TIF'), ("JPEG File", '.jpeg')])
+#         im = Image.open(path)
+#         im = im.resize((600, 600), Image.ANTIALIAS)
+#         tkimage = ImageTk.PhotoImage(im)
+#         myvar = Label(self.master, image=tkimage)
+#         myvar.image = tkimage
+#         myvar.place(relx=.5, x=400, y=400, anchor="center")
+#
+#
+#
+
+
+
+#
+# def main():
+#
+#     # blank window
+#     root = Tk()
+#     # this will be the title of the window
+#     root.title("Hebrew Handwriting Recognition")
+#
+#     root.state('zoomed')
+#     root.resizable(False, False)
+#     # program = Program()
+#     convert_btn = Button(root, text="בצע המרה", state="disable")
+#     convert_btn.place(relx=1, x=-250, y=720, anchor=NE)
+#
+#
+#     browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=  hello)
+#     browse_btn.place(relx=1, x=-300, y=60, anchor=NE)
+#
+#
+#
+#
+#     # this is for kiping the window open until we press exit (X)
+#     root.mainloop()
+#
+#
+# if __name__ == '__main__':
+#     main()
 
 
 
