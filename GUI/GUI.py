@@ -36,6 +36,9 @@ close_btn.place(x=100, y=800, anchor=NE)
 convert_btn = Button(root, text="בצע המרה", state="disable")
 convert_btn.place(relx=1, x=-250, y=720, anchor=NE)
 
+cancel_convert_btn = Button(root, text="בטל המרה", state="disable")
+cancel_convert_btn.place(relx=1, x=-350, y=720, anchor=NE)
+
 
 
 def add_image_to_convert(img):
@@ -56,11 +59,11 @@ def hello():
     img = Image.open(path)
     add_image_to_convert(img)
     convert_btn['state'] = "enable"
-
+    cancel_convert_btn['state'] = "enable"
 
 
 browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=hello)
-browse_btn.place(relx=1, x=-300, y=60, anchor=NE)
+browse_btn.place(relx=1, x=-270, y=60, anchor=NE)
 
 root.mainloop()
 
