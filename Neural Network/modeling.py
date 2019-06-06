@@ -5,11 +5,7 @@ from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
 from keras.layers import Dropout
-from keras.models import model_from_json
-import  pandas as pd
-# ignore warning
 import os
-import cv2
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -17,8 +13,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from keras.preprocessing.image import ImageDataGenerator
 
 # predictions
-import numpy as np
-from keras.preprocessing import image
 
 
 def run_model(num_of_epochs, train_size, test_size, batch_Size, filters, dropout,kernel, model_number):
@@ -42,6 +36,8 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, filters, dropout
     #
     # classifier.add(MaxPooling2D(pool_size=(2, 2)))
 
+    classifier.add(Dropout(dropout))
+
     # Step 3 - Flattening
     classifier.add(Flatten())
 
@@ -49,19 +45,17 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, filters, dropout
     # Step 4 - Full Connection
     # add hidden layers
 
-    classifier.add(Dense(units=1024, activation="relu"))
+
+    classifier.add(Dense(units=2048, activation="relu"))
     classifier.add(Dropout(dropout))
+
+    classifier.add(Dense(units=1024, activation="relu"))
 
     classifier.add(Dense(units=512, activation="relu"))
     classifier.add(Dropout(dropout))
 
     classifier.add(Dense(units=256, activation="relu"))
     classifier.add(Dropout(dropout))
-
-    classifier.add(Dense(units=128, activation="relu"))
-    classifier.add(Dropout(dropout))
-    # classifier.add(Dense(units=64, activation="relu"))
-    # classifier.add(Dropout(dropout))
 
 
     # Output layer
@@ -81,11 +75,6 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, filters, dropout
     classifier.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     # Part 2 : Fitting the CNN to the images
-
-    # num_of_epochs = 20
-    # train_size = 82620
-    # test_size = 27540
-    # batch_Size = 128
 
     # the batch_size is similar to k-fold , we choose k batches when k<num of samples and the NN train each k samples each time
     train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
@@ -116,6 +105,7 @@ def run_model(num_of_epochs, train_size, test_size, batch_Size, filters, dropout
     # serialize weights to HDF5
     classifier.save_weights("model"+str(model_number)+".h5")
     print("Saved model to disk")
+
 
     loss, acc = classifier.evaluate_generator(test_set,steps=batch_Size)
     print("loss:"+ str(loss)+"  ,acc: "+str(acc))
