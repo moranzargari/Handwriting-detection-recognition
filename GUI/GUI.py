@@ -23,7 +23,6 @@ root.resizable(False, False)
 
 C = Canvas(root, bg="blue", height=250, width=300)
 filename = Image.open("back_img.jpg")
-# filename = filename.resize((2000, 1000), Image.ANTIALIAS)
 filename = ImageTk.PhotoImage(filename)
 
 background_label = Label(root, image=filename)
@@ -35,7 +34,6 @@ lbl_output = tk.Label(root, text=": פלט (טקסט מוקלד)", font=("david"
 lbl_output.place(x=700, y=68, anchor=NE)
 
 area = Text(root, height=30.1, width=67, font='david',borderwidth=0.5, relief="solid")
-# area.insert(tk.END,"alooooooooooooooooooooooo")
 area.place(x =400, y =400, anchor="center")
 
 save_btn = Button(root, text="TXT שמור כקובץ ")
