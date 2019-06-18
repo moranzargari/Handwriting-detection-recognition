@@ -36,13 +36,13 @@ def load_jason(model_name):
 
 
 def clasify_letter(window_img, classifier_letters):
-    # img = cv2.cvtColor(window_img, cv2.COLOR_BGR2GRAY)
+
     img = cv2.resize(window_img, (28, 28))
     check_image = img
     check_image = image.img_to_array(check_image)
     check_image = np.expand_dims(check_image, axis=0)
     result = classifier_letters.predict(check_image / 255)
-    prediction_index = np.argmax(result[0])
-    return prediction_index
+    # prediction_index = np.argmax(result[0])
+    return result
 
 
