@@ -19,12 +19,16 @@ def convert_the_image(original):
     # first stage = find the image lines
     lines_images = sumPixels_stage(original)
     output_text = ""
+
     for i, line in enumerate(lines_images):
         words = Dynamic_dilation.dynamicDilation(line)
         for j, word in enumerate(words):
             letters = FindConturs.find_letters(word)
+            end_of_list = 0
             for k, letter in enumerate(letters):
-                output_text += classify_letters_images(letter, classifier_letters)
+                if k == len(letters) -1:
+                    end_of_list = 1
+                output_text += classify_letters_images(letter, classifier_letters, end_of_list)
             output_text+=" "
         output_text+= "\n"
     #     break
@@ -62,20 +66,53 @@ def init_Neural_Network():
     # return classifier_img, classifier_letters
     return classifier_letters
 
-def classify_letters_images(letter_img, classifier_letters):
+def classify_letters_images(letter_img, classifier_letters, end_of_list):
     # we loaded the 2 models in the beginning
     # the flag decide which model we want to run
     # we have 2 options : (0) model to classify if the image contain letter or not
     # (1) model to classify which letter the image is.
     # so we must first check with stage (0) if the image contain letter at all and then (1) recognize which letter it is
 
-    # letter_or_not = Prediction.clasisfy_img(window_img, classifier_img)
-    # if letter_or_not == 0:
-    #     return letter_or_not# 0- not letter, 1- yes letter
-    # else:
-        letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י'
-                    , 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
-                   'ך', 'ם', 'ן', 'ף', 'ץ']
+    letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י'
+                , 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
+               'ך', 'ם', 'ן', 'ף', 'ץ']
 
-        prediction_index = Prediction.clasify_letter(letter_img, classifier_letters)
-        return letters[prediction_index] # returns the actual letter in hebrew in string
+    predictions_vector = Prediction.clasify_letter(letter_img, classifier_letters)
+    prediction_index = np.argmax(predictions_vector[0])
+    str_letter = letters[prediction_index]
+    str_letter_temp = str_letter
+
+    if end_of_list == 0:
+        problem_letters = ['ך', 'ם', 'ן', 'ף', 'ץ']
+    else:
+        problem_letters = [ 'כ','מ', 'נ', 'פ', 'צ']
+
+    while str_letter_temp in problem_letters:
+            predictions_vector[0][prediction_index] = 0
+            prediction_index = np.argmax(predictions_vector[0])
+            str_letter_temp = letters[prediction_index]
+
+
+    if predictions_vector[0][prediction_index] == 0:
+        if str_letter == 'ף':
+            prediction_index = 11
+        elif str_letter == 'ם':
+            prediction_index = 14
+        elif str_letter == 'ץ':
+            prediction_index = 11
+        elif str_letter == 'ן':
+            prediction_index = 5
+        elif str_letter == 'ך':
+            prediction_index = 18
+        elif str_letter == 'פ':
+            prediction_index = 11
+        elif str_letter == 'מ':
+            prediction_index = 14
+        elif str_letter == 'צ':
+            prediction_index = 11
+        elif str_letter == 'נ':
+            prediction_index = 5
+        elif str_letter == 'כ':
+            prediction_index = 18
+
+    return letters[prediction_index] # returns the actual letter in hebrew in string
