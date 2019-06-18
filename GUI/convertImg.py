@@ -19,16 +19,31 @@ def convert_the_image(original):
     # first stage = find the image lines
     lines_images = sumPixels_stage(original)
     output_text = ""
-
+    flag = 0  # flag for כ
     for i, line in enumerate(lines_images):
         words = Dynamic_dilation.dynamicDilation(line)
         for j, word in enumerate(words):
             letters = FindConturs.find_letters(word)
             end_of_list = 0
             for k, letter in enumerate(letters):
-                if k == len(letters) -1:
+                if k == len(letters) - 1:
                     end_of_list = 1
-                output_text += classify_letters_images(letter, classifier_letters, end_of_list)
+                char = classify_letters_images(letter, classifier_letters, end_of_list)
+                if char == 'כ':
+                    result = check_c(letter)
+                    if result == 1:
+                        flag = 1
+                    else:
+                        output_text+= char
+                else:
+                    if flag == 1 and char == 'ו':
+                        output_text += 'א'
+                        flag = 0
+                    elif flag == 1:
+                        output_text += 'טו'
+                        flag = 0
+                    else:
+                        output_text += char
             output_text+=" "
         output_text+= "\n"
     #     break
@@ -116,3 +131,21 @@ def classify_letters_images(letter_img, classifier_letters, end_of_list):
             prediction_index = 18
 
     return letters[prediction_index] # returns the actual letter in hebrew in string
+
+def check_c(letter):
+    ret, thresh = cv2.threshold(letter, 109, 255, cv2.THRESH_BINARY_INV)
+    cv2.imshow('kkk', thresh)
+    cv2.waitKey(0)
+    H, W = letter.shape[:2]
+    height = H // 2
+    i = 0
+    j = W - 1
+    while thresh[height][i] != 255 and thresh[height][j] != 255:
+        print("alo")
+        i += 1
+        j -= 1
+    print(i, j)
+    if thresh[height][i] == 255:
+        return 1
+    else:
+        return 0
