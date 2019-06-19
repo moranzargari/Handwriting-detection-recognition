@@ -8,7 +8,7 @@ from tkinter import filedialog
 import cv2
 import numpy as np
 import convertImg
-
+from tkinter import messagebox
 
 
 # blank window
@@ -38,7 +38,7 @@ lbl_output.place(x=700, y=68, anchor=NE)
 area = Text(root, height=30.1, width=67, font='david',borderwidth=0.5, relief="solid")
 area.place(x =400, y =400, anchor="center")
 
-save_btn = Button(root, text="TXT שמור כקובץ ", style='my.TButton')
+save_btn = Button(root, text="TXT שמור כקובץ ", state="disable", style='my.TButton')
 save_btn.place(x=430, y=720, anchor=NE)
 
 close_btn = Button(root, text="סגור", command=root.destroy, style='my.TButton')
@@ -53,12 +53,12 @@ myvar.image = tkimage
 myvar.place(relx=.5, x=400, y=400, anchor="center")
 
 
-
-
 def convert_to_text(imageToConvert):
     area.delete('1.0', END)
     imageToConvert = np.asarray(imageToConvert)
     area.insert(tk.END, convertImg.convert_the_image(imageToConvert))
+    save_btn['state'] = "enable"
+    save_btn['command'] = lambda: save_txt()
 
 
 
@@ -78,12 +78,15 @@ def upload_img():
     convert_btn['command'] = lambda: convert_to_text(imageToConvert)
 
 
+def save_txt():
+    text = area.get("1.0", END)  # get the text from text area
+    f = open("output.txt", "w")
+    f.write(text)
+    f.close()
+    messagebox.showinfo("הודעה", "!התמונה הומרה לקובץ טקסט בהצלחה \n :שם הקובץ \n output.txt")
 
 browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=upload_img, style='my.TButton')
 browse_btn.place(relx=1, x=-270, y=60, anchor=NE)
-
-
-
 
 
 convert_btn = Button(root, text="בצע המרה", state="disable",  style='my.TButton')
