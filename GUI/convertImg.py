@@ -29,6 +29,8 @@ def convert_the_image(original):
                 if k == len(letters) - 1:
                     end_of_list = 1
                 char = classify_letters_images(letter, classifier_letters, end_of_list)
+                if char == 'ו' or char == 'י':
+                    char = vav_OR_yud(char, letter, word.shape[0], end_of_list)
                 if char == 'כ':
                     result = check_c(letter)
                     if result == 1:
@@ -92,7 +94,7 @@ def classify_letters_images(letter_img, classifier_letters, end_of_list):
                 , 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
                'ך', 'ם', 'ן', 'ף', 'ץ']
 
-    predictions_vector = Prediction.clasify_letter(letter_img, classifier_letters)
+    predictions_vector = Prediction.clasify_letter(letter_img.image_letter, classifier_letters)
     prediction_index = np.argmax(predictions_vector[0])
     str_letter = letters[prediction_index]
     str_letter_temp = str_letter
@@ -132,11 +134,11 @@ def classify_letters_images(letter_img, classifier_letters, end_of_list):
 
     return letters[prediction_index] # returns the actual letter in hebrew in string
 
+
+
 def check_c(letter):
-    ret, thresh = cv2.threshold(letter, 109, 255, cv2.THRESH_BINARY_INV)
-    cv2.imshow('kkk', thresh)
-    cv2.waitKey(0)
-    H, W = letter.shape[:2]
+    ret, thresh = cv2.threshold(letter.image_letter, 109, 255, cv2.THRESH_BINARY_INV)
+    H, W = letter.image_letter.shape[:2]
     height = H // 2
     i = 0
     j = W - 1
@@ -149,3 +151,16 @@ def check_c(letter):
         return 1
     else:
         return 0
+
+
+def vav_OR_yud(char, letterObject, wordH, end_of_list):
+
+    if end_of_list == 1 and letterObject.conturH > wordH * 0.7:
+        return 'ן'
+
+    if letterObject.conturH < wordH * 0.3:
+        return 'י'
+    elif letterObject.conturH > wordH * 0.55:
+        return 'ו'
+    else:
+        return char
