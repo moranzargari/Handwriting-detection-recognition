@@ -19,6 +19,8 @@ root.title("Hebrew Handwriting Recognition")
 root.state('zoomed')
 root.resizable(False, False)
 
+s = Style()
+s.configure('my.TButton', font=('Helvetica', 12))
 
 
 C = Canvas(root, bg="blue", height=250, width=300)
@@ -30,17 +32,17 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 C.pack()
 
 
-lbl_output = tk.Label(root, text=": פלט (טקסט מוקלד)", font=("david", 14))
+lbl_output = tk.Label(root, text=": פלט (טקסט מוקלד)", font=("Helvetica", 14))
 lbl_output.place(x=700, y=68, anchor=NE)
 
 area = Text(root, height=30.1, width=67, font='david',borderwidth=0.5, relief="solid")
 area.place(x =400, y =400, anchor="center")
 
-save_btn = Button(root, text="TXT שמור כקובץ ")
+save_btn = Button(root, text="TXT שמור כקובץ ", style='my.TButton')
 save_btn.place(x=430, y=720, anchor=NE)
 
-close_btn = Button(root, text="סגור", command=root.destroy)
-close_btn.place(x=100, y=800, anchor=NE)
+close_btn = Button(root, text="סגור", command=root.destroy, style='my.TButton')
+close_btn.place(x=150, y=800, anchor=NE)
 
 #init - adding an example image for instructions
 img = Image.open("Untitled.png")
@@ -54,11 +56,10 @@ myvar.place(relx=.5, x=400, y=400, anchor="center")
 
 
 def convert_to_text(imageToConvert):
+    area.delete('1.0', END)
     imageToConvert = np.asarray(imageToConvert)
     area.insert(tk.END, convertImg.convert_the_image(imageToConvert))
 
-    cancel_convert_btn = Button(root, text="בטל המרה", state="enable")
-    cancel_convert_btn.place(relx=1, x=-350, y=720, anchor=NE)
 
 
 def add_image_to_convert(img):
@@ -78,11 +79,15 @@ def upload_img():
 
 
 
-browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=upload_img)
+browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=upload_img, style='my.TButton')
 browse_btn.place(relx=1, x=-270, y=60, anchor=NE)
 
-convert_btn = Button(root, text="בצע המרה", state="disable")
-convert_btn.place(relx=1, x=-250, y=720, anchor=NE)
+
+
+
+
+convert_btn = Button(root, text="בצע המרה", state="disable",  style='my.TButton')
+convert_btn.place(relx=1, x=-300, y=720, anchor=NE)
 
 
 root.mainloop()
