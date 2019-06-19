@@ -13,7 +13,6 @@ def draw_white_cells(roiriginal, roi):
 
 def find_letters(word_image):
 
-
    if word_image.shape[0] < 40:
       print(word_image.shape[0])
       word_image = cv2.resize(word_image, (word_image.shape[1] * 2, word_image.shape[0] * 2))
@@ -23,23 +22,14 @@ def find_letters(word_image):
    #binary
    ret,thresh = cv2.threshold(gray, 109, 255, cv2.THRESH_BINARY_INV)
 
-
-
-   #dilation
-   # kernel = np.ones((3,3), np.uint8)
-   # img_dilation = cv2.dilate(thresh, kernel, iterations=1)
-   # cv2.imshow('dilated',thresh)
-   # cv2.waitKey(0)
    im2, ctrs, hier = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
 
    #sort contours
    sorted_ctrs = sorted(ctrs, key=lambda ctr: cv2.boundingRect(ctr)[0], reverse=True)
 
 
 
-   letters_images = list()
-   new_ctr = list()
+#creating objects - so we coult hold a few arguments that connected together in the same variable
 
    class contur:
       def __init__(self, x, y, w, h):
@@ -47,6 +37,14 @@ def find_letters(word_image):
          self.y_start = y
          self.x_end = x + w
          self.y_end = y + h
+
+   class charInfo:
+      def __init__(self,img_b, conturHight):
+         self.image_letter = img_b
+         self.conturH = conturHight
+
+   letters_images = list()
+   new_ctr = list()
 
    for j, ctr in enumerate(sorted_ctrs):
       x, y, w, h = cv2.boundingRect(ctr)
@@ -79,15 +77,14 @@ def find_letters(word_image):
             roi = canvas[y:y + h, x:x + w]
             roiriginal = word_image[y:y + h, x:x + w]
          roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-         # cv2.imshow(str(i)+"roi1", roi)
-         # cv2.imshow(str(i)+"roi2", roiriginal)
-         # cv2.waitKey(0)
          roi = draw_white_cells(roiriginal, roi)
          roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+
          img_b = np.pad(roi, pad_width=10, mode='constant', constant_values=255)
+         letterInfo = charInfo(img_b, roi.shape[0])
          # cv2.imshow(str(i), img_b)
          # cv2.waitKey(0)
          # cv2.destroyAllWindows()
-         letters_images.append(img_b)
+         letters_images.append(letterInfo)
       i+=1
    return letters_images
