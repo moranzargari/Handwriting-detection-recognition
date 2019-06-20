@@ -8,7 +8,6 @@ import numpy as np
 
 
 def convert_the_image(original):
-
     # first lets load the 2 models we have for efficiency
     # classifier_img will be the classifier that decide if the img contain a letter or not.
     # classifier_letters be the classifier that decide which letter it is
@@ -29,6 +28,8 @@ def convert_the_image(original):
                 if k == len(letters) - 1:
                     end_of_list = 1
                 char = classify_letters_images(letter, classifier_letters, end_of_list)
+                if char == 'ג' or char == 'ז':
+                    char = z_Or_g(char, letter)
                 if char == 'ו' or char == 'י':
                     char = vav_OR_yud(char, letter, word.shape[0], end_of_list)
                 if char == 'כ':
@@ -36,7 +37,7 @@ def convert_the_image(original):
                     if result == 1:
                         flag = 1
                     else:
-                        output_text+= char
+                        output_text += char
                 else:
                     if flag == 1 and char == 'ו':
                         output_text += 'א'
@@ -46,8 +47,8 @@ def convert_the_image(original):
                         flag = 0
                     else:
                         output_text += char
-            output_text+=" "
-        output_text+= "\n"
+            output_text += " "
+        output_text += "\n"
     #     break
     # for i, word in enumerate(words):
     #     cv2.imshow(str(i), word)
@@ -56,9 +57,7 @@ def convert_the_image(original):
     return output_text
 
 
-
 def sumPixels_stage(original):
-
     gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
 
@@ -75,13 +74,13 @@ def sumPixels_stage(original):
 
 
 def init_Neural_Network():
-
     # classifier_img = Prediction.load_jason("model126")
     # classifier_img.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     classifier_letters = Prediction.load_jason("model99")
     classifier_letters.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     # return classifier_img, classifier_letters
     return classifier_letters
+
 
 def classify_letters_images(letter_img, classifier_letters, end_of_list):
     # we loaded the 2 models in the beginning
@@ -91,7 +90,7 @@ def classify_letters_images(letter_img, classifier_letters, end_of_list):
     # so we must first check with stage (0) if the image contain letter at all and then (1) recognize which letter it is
 
     letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י'
-                , 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
+        , 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
                'ך', 'ם', 'ן', 'ף', 'ץ']
 
     predictions_vector = Prediction.clasify_letter(letter_img.image_letter, classifier_letters)
@@ -102,13 +101,12 @@ def classify_letters_images(letter_img, classifier_letters, end_of_list):
     if end_of_list == 0:
         problem_letters = ['ך', 'ם', 'ן', 'ף', 'ץ']
     else:
-        problem_letters = [ 'כ','מ', 'נ', 'פ', 'צ']
+        problem_letters = ['כ', 'מ', 'נ', 'פ', 'צ']
 
     while str_letter_temp in problem_letters:
-            predictions_vector[0][prediction_index] = 0
-            prediction_index = np.argmax(predictions_vector[0])
-            str_letter_temp = letters[prediction_index]
-
+        predictions_vector[0][prediction_index] = 0
+        prediction_index = np.argmax(predictions_vector[0])
+        str_letter_temp = letters[prediction_index]
 
     if predictions_vector[0][prediction_index] == 0:
         if str_letter == 'ף':
@@ -132,8 +130,7 @@ def classify_letters_images(letter_img, classifier_letters, end_of_list):
         elif str_letter == 'כ':
             prediction_index = 18
 
-    return letters[prediction_index] # returns the actual letter in hebrew in string
-
+    return letters[prediction_index]  # returns the actual letter in hebrew in string
 
 
 def check_c(letter):
@@ -143,10 +140,8 @@ def check_c(letter):
     i = 0
     j = W - 1
     while thresh[height][i] != 255 and thresh[height][j] != 255:
-        print("alo")
         i += 1
         j -= 1
-    print(i, j)
     if thresh[height][i] == 255:
         return 1
     else:
@@ -154,7 +149,6 @@ def check_c(letter):
 
 
 def vav_OR_yud(char, letterObject, wordH, end_of_list):
-
     if end_of_list == 1 and letterObject.conturH > wordH * 0.7:
         return 'ן'
 
@@ -164,3 +158,43 @@ def vav_OR_yud(char, letterObject, wordH, end_of_list):
         return 'ו'
     else:
         return char
+
+
+def z_Or_g(char, letterObject):
+    letter = cv2.resize(letterObject.image_letter, (28, 28))
+    ret, letter = cv2.threshold(letter, 109, 255, cv2.THRESH_BINARY_INV)
+    letter = 255- letter
+    i = 27
+    j = 14
+    lower_range = 0
+    upper_range = 0
+    while i > 0:
+        if letter[i][j] == 0 and lower_range == 0:
+            while i > 0 and letter[i][j] == 0:
+                i -= 1
+            lower_range = i
+        if letter[i][j] == 0 and lower_range != 0:
+            upper_range = i + 1
+            break
+        i -= 1
+    if upper_range == 0:
+        return char
+    for k in range(upper_range,lower_range):
+        r = 1
+        while letter[k][j + r] == 255 and letter[k][j - r] == 255:
+            if r == 13:
+                return char
+            r += 1
+        if letter[k][j + r] == 0 and letter[k][j - r] == 0:
+            continue
+        if letter[k][j + r] == 0:
+            while letter[k][j - r] == 255:
+                if r == 13:
+                    return 'ז'
+                r += 1
+        elif letter[k][j - r] == 0:
+            while letter[k][j + r] == 255:
+                if r == 13:
+                    return 'ג'
+                r += 1
+    return char
