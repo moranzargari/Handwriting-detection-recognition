@@ -14,7 +14,6 @@ def draw_white_cells(roiriginal, roi):
 def find_letters(word_image):
 
    if word_image.shape[0] < 40:
-      print(word_image.shape[0])
       word_image = cv2.resize(word_image, (word_image.shape[1] * 2, word_image.shape[0] * 2))
    #grayscale
    gray = cv2.cvtColor(word_image,cv2.COLOR_BGR2GRAY)
@@ -64,14 +63,23 @@ def find_letters(word_image):
          canvas.fill(255)
          cv2.drawContours(canvas, sorted_ctrs, i, (0, 0, 0), 3)
 
-         if i < length - 1 and new_ctr[i].x_start >= new_ctr[i + 1].x_start and new_ctr[i].x_end <= new_ctr[
-            i + 1].x_end:
+         if i < length - 1 and new_ctr[i].x_start >= new_ctr[i + 1].x_start and new_ctr[i].x_end <= new_ctr[i + 1].x_end:
             Y_end_bigger = max(new_ctr[i].y_end, new_ctr[i + 1].y_end)
             cv2.drawContours(canvas, sorted_ctrs, i + 1, (0, 0, 0), 3)
-            # canvas = cv2.erode(canvas, kernel, iterations=1)
-            roi = canvas[new_ctr[i + 1].y_start:Y_end_bigger, new_ctr[i + 1].x_start:new_ctr[i + 1].x_end]
-            roiriginal = word_image[new_ctr[i + 1].y_start:Y_end_bigger, new_ctr[i + 1].x_start:new_ctr[i + 1].x_end]
-            i += 1
+            xtemp = new_ctr[i].x_start-3
+            ytemp = new_ctr[i].y_end-1
+            temp_canvas =cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
+            ret, temp_canvas = cv2.threshold(temp_canvas, 109, 255, cv2.THRESH_BINARY_INV)
+            while temp_canvas[ytemp][xtemp] != 255 and xtemp >= new_ctr[i + 1].x_start and xtemp>0:
+               xtemp -= 1
+            if temp_canvas[ytemp][xtemp] == 255:
+               roi = canvas[y:y + h, x:x + w]
+               roiriginal = word_image[y:y + h, x:x + w]
+            else:
+               # canvas = cv2.erode(canvas, kernel, iterations=1)
+               roi = canvas[new_ctr[i + 1].y_start:Y_end_bigger, new_ctr[i + 1].x_start:new_ctr[i + 1].x_end]
+               roiriginal = word_image[new_ctr[i + 1].y_start:Y_end_bigger, new_ctr[i + 1].x_start:new_ctr[i + 1].x_end]
+               i += 1
          else:
             # canvas = cv2.erode(canvas, kernel, iterations=1)
             roi = canvas[y:y + h, x:x + w]
