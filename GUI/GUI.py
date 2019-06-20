@@ -71,7 +71,8 @@ def add_image_to_convert(img):
 
 
 def upload_img():
-    path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg'), ("PNG File", '.png'), ("TIF File", '.TIF'), ("JPEG File", '.jpeg')])
+    path = filedialog.askopenfilename(filetypes=[("Image File", '.jpg'), ("PNG File", '.png'), ("TIF File", '.TIF'),
+                                                 ("JPEG File", '.jpeg')])
     imageToConvert = Image.open(path)
     add_image_to_convert(imageToConvert)
     convert_btn['state'] = "enable"
@@ -80,10 +81,21 @@ def upload_img():
 
 def save_txt():
     text = area.get("1.0", END)  # get the text from text area
-    f = open("output.txt", "w")
-    f.write(text)
-    f.close()
-    messagebox.showinfo("הודעה", "!התמונה הומרה לקובץ טקסט בהצלחה \n :שם הקובץ \n output.txt")
+    name = filedialog.asksaveasfilename(
+        initialdir="C:",
+        title="Choose your file",
+        filetypes=(
+            ("Text Files", "*.txt"),
+            ),
+        defaultextension=''
+    )
+    try:
+        f = open(name, "w")
+        f.write(text)
+        f.close()
+        messagebox.showinfo("הודעה", "!התמונה הומרה לקובץ טקסט בהצלחה \n :הקובץ נשמר ב \n " + str(name))
+    except:
+        pass
 
 browse_btn = Button(root, text="בחר תמונה שברצונך להמיר", command=upload_img, style='my.TButton')
 browse_btn.place(relx=1, x=-270, y=60, anchor=NE)
