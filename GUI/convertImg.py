@@ -22,7 +22,7 @@ def convert_the_image(original):
     for i, line in enumerate(lines_images):
         words = Dynamic_dilation.dynamicDilation(line)
         for j, word in enumerate(words):
-            letters = FindConturs.find_letters(word)
+            letters = FindConturs.find_letters(word.roi)
             end_of_list = 0
             for k, letter in enumerate(letters):
                 if k == len(letters) - 1:
@@ -31,7 +31,7 @@ def convert_the_image(original):
                 if char == 'ג' or char == 'ז':
                     char = z_Or_g(char, letter)
                 if char == 'ו' or char == 'י':
-                    char = vav_OR_yud(char, letter, word.shape[0], end_of_list)
+                    char = vav_OR_yud(char, letter, word.hight, end_of_list)
                 if char == 'כ':
                     result = check_c(letter)
                     if result == 1:
@@ -153,10 +153,10 @@ def check_c(letter):
 
 
 def vav_OR_yud(char, letterObject, wordH, end_of_list):
-    if end_of_list == 1 and letterObject.conturH > wordH * 0.7:
+    if end_of_list == 1 and letterObject.conturH > wordH * 0.85:
         return 'ן'
 
-    if letterObject.conturH < wordH * 0.3:
+    if letterObject.conturH < wordH * 0.35:
         return 'י'
     elif letterObject.conturH > wordH * 0.55:
         return 'ו'
@@ -167,7 +167,7 @@ def vav_OR_yud(char, letterObject, wordH, end_of_list):
 def z_Or_g(char, letterObject):
     letter = cv2.resize(letterObject.image_letter, (28, 28))
     ret, letter = cv2.threshold(letter, 109, 255, cv2.THRESH_BINARY_INV)
-    letter = 255- letter
+    letter = 255 - letter
     i = 27
     j = 14
     lower_range = 0
