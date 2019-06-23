@@ -2,9 +2,25 @@ import cv2
 import numpy as np
 
 
+
+def attach(roi):
+    word = roi.copy()
+    try:
+        word = cv2.cvtColor(word, cv2.COLOR_BGR2GRAY)
+    except:
+        pass
+    ret, thresh = cv2.threshold(word, 109, 255, cv2.THRESH_BINARY_INV)
+    kernel = np.ones((1, 40), np.float32)
+    img_dilation = cv2.dilate(thresh, kernel, iterations=1)
+    im2, ctrs, hier = cv2.findContours(img_dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    x, y, w, h = cv2.boundingRect(ctrs[0])
+
+    return h
+
+
+
 def dynamicDilation(original):
-
-
 
     # fitting image size
     if original.shape[0] < 40:
@@ -81,6 +97,13 @@ def dynamicDilation(original):
     # sort contours = sort the word
     sorted_ctrs = sorted(ctrs_prev, key=lambda ctr: cv2.boundingRect(ctr)[0], reverse=True)
     line_words = list()
+
+    class word_obj:
+        def __init__(self, hight, roi):
+            self.hight = hight
+            self.roi = roi
+
+
     for i, ctr in enumerate(sorted_ctrs):
         # Get bounding box
         x, y, w, h = cv2.boundingRect(ctr)
@@ -88,9 +111,11 @@ def dynamicDilation(original):
         h = H
         # Getting ROI
         roi = original[y:y + h, x:x + w]
-        line_words.append(roi)
+        hight = attach(roi)
+        wordObject = word_obj(hight, roi)
+        line_words.append(wordObject)
         # show ROI
-        # cv2.imshow('segment no:' + str(i), roi)
+        # cv2.imshow('segment no:' + str(i), new_roi)
         # # cv2.rectangle(image, (x, y), (x + w, y + h), (90, 0, 255), 2)
         # cv2.waitKey(0)
     return line_words
