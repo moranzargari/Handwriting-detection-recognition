@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 
 
-
-
-
 def dynamicDilation(original):
 
 
@@ -24,11 +21,13 @@ def dynamicDilation(original):
     new_image = new_image[int(H * 0.1):int(H * 0.8), :]
 
     # grayscale
-    gray = cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY)
+    try:
+        new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY)
+    except:
+        pass
 
     # binary
-    ret, thresh = cv2.threshold(gray, 109, 255, cv2.THRESH_BINARY_INV)
-
+    ret, thresh = cv2.threshold(new_image, 109, 255, cv2.THRESH_BINARY_INV)
 
     ####################################################################
     # find the contours before the dilation
