@@ -107,7 +107,7 @@ def detect_Lines(original,thresh):
             count_lines_min_hight += 1
         if roi.shape[0] > 7:
             lines.append(roi)
-        # cv2.imshow(str(v), roi)
+        # cv2.imshow('malben', roi)
         # cv2.imwrite("alo1/" + str(v) + ".png", roi)
         # cv2.waitKey(0)
     if count_lines_min_hight > len(lines)*0.5:
