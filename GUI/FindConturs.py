@@ -34,6 +34,10 @@ def draw_white_cells(roiriginal, roi):
 
 def find_letters(word_image):
 
+
+   # cv2.imshow("kkkk", word_image)
+   # cv2.waitKey(0)
+
    if word_image.shape[0] < 40:
       word_image = cv2.resize(word_image, (word_image.shape[1] * 2, word_image.shape[0] * 2))
    #grayscale
