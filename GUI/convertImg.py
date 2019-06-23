@@ -58,8 +58,12 @@ def convert_the_image(original):
 
 
 def sumPixels_stage(original):
-    gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-    ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
+    copy_img = original.copy()
+    try:
+        copy_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+    except:
+        pass
+    ret, thresh = cv2.threshold(copy_img, 127, 255, cv2.THRESH_BINARY_INV)
 
     # init - size_flg check if the image need resize
     lines, size_flg = sumPixels.detect_Lines(original, thresh)
