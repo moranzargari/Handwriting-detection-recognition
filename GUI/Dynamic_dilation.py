@@ -5,10 +5,6 @@ import numpy as np
 
 def attach(roi):
     word = roi.copy()
-    try:
-        word = cv2.cvtColor(word, cv2.COLOR_BGR2GRAY)
-    except:
-        pass
     ret, thresh = cv2.threshold(word, 109, 255, cv2.THRESH_BINARY_INV)
     kernel = np.ones((1, 40), np.float32)
     img_dilation = cv2.dilate(thresh, kernel, iterations=1)
@@ -35,12 +31,6 @@ def dynamicDilation(original):
     # copy image
     new_image = original.copy()
     new_image = new_image[int(H * 0.1):int(H * 0.8), :]
-
-    # grayscale
-    try:
-        new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY)
-    except:
-        pass
 
     # binary
     ret, thresh = cv2.threshold(new_image, 109, 255, cv2.THRESH_BINARY_INV)
