@@ -18,11 +18,14 @@ def attach(roi):
 
 def dynamicDilation(original):
 
+    flg_size = 0
     # fitting image size
     if original.shape[0] < 40:
         original = cv2.resize(original, (original.shape[1] * 2, original.shape[0] * 2))
+        flg_size = 1
     elif original.shape[0] > 75:
         original = cv2.resize(original, (original.shape[1] // 2, original.shape[0] // 2))
+        flg_size = 2
     H, W = original.shape[:2]
 
 
@@ -89,9 +92,11 @@ def dynamicDilation(original):
     line_words = list()
 
     class word_obj:
-        def __init__(self, hight, roi):
+        def __init__(self, hight, roi, left_bound, right_bound):
             self.hight = hight
             self.roi = roi
+            self.left_bound = left_bound
+            self.right_bound = right_bound
 
 
     for i, ctr in enumerate(sorted_ctrs):
@@ -102,7 +107,12 @@ def dynamicDilation(original):
         # Getting ROI
         roi = original[y:y + h, x:x + w]
         hight = attach(roi)
-        wordObject = word_obj(hight, roi)
+        if flg_size == 0:
+            wordObject = word_obj(hight, roi, x, x+w)
+        elif flg_size == 1:
+            wordObject = word_obj(hight, roi, x // 2, (x + w) // 2)
+        else:
+            wordObject = word_obj(hight, roi,  x * 2, (x + w) * 2)
         line_words.append(wordObject)
         # show ROI
         # cv2.imshow('segment no:' + str(i), new_roi)
