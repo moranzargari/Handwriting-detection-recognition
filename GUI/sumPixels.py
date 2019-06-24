@@ -96,6 +96,13 @@ def detect_Lines(original,thresh):
 
     ####################################################################
     # cut's each line
+    class line:
+        def __init__(self, img, upper_bound, lower_bound):
+            self.img = img
+            self.upper_bound = upper_bound
+            self.lower_bound =lower_bound
+
+
     lines = list()
     min_line_hight = 20
     count_lines_min_hight = 0
@@ -106,12 +113,12 @@ def detect_Lines(original,thresh):
         if roi.shape[0] < min_line_hight:
             count_lines_min_hight += 1
         if roi.shape[0] > 7:
-            lines.append(roi)
+            cur_line = line(roi,lines_upper[v],lines_lower[v + 1])
+            lines.append(cur_line)
         # cv2.imshow('malben', roi)
         # cv2.imwrite("alo1/" + str(v) + ".png", roi)
         # cv2.waitKey(0)
     if count_lines_min_hight > len(lines)*0.5:
-        print(count_lines_min_hight, len(lines)*0.5)
         return lines, 1
     return lines, 0
 
