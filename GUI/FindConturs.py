@@ -7,10 +7,7 @@ def union_left_ctr(cur_ctr, next_ctr,canvas):
    xtemp = cur_ctr.x_start - 3
    ytemp = cur_ctr.y_end - 1
 
-   try:
-      temp_canvas = cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
-   except:
-      temp_canvas = canvas.copy()
+   temp_canvas = canvas.copy()
    ret, temp_canvas = cv2.threshold(temp_canvas, 109, 255, cv2.THRESH_BINARY_INV)
    while temp_canvas[ytemp][xtemp] != 255 and xtemp >= next_ctr.x_start and xtemp > 0:
       xtemp -= 1
@@ -26,10 +23,7 @@ def draw_white_cells(roiriginal, roi):
    for k in range(roi_temp.shape[0]):
       for j in range(roi_temp.shape[1]):
          if roi[k][j] == 255:
-            # try:
             roi_temp[k][j] = 255
-            # except Exception:
-            #    pass
    return roi_temp
 
 def find_letters(word_image):
@@ -40,11 +34,6 @@ def find_letters(word_image):
 
    if word_image.shape[0] < 40:
       word_image = cv2.resize(word_image, (word_image.shape[1] * 2, word_image.shape[0] * 2))
-   #grayscale
-   try:
-      word_image = cv2.cvtColor(word_image,cv2.COLOR_BGR2GRAY)
-   except:
-      pass
 
    #binary
    ret,thresh = cv2.threshold(word_image, 109, 255, cv2.THRESH_BINARY_INV)
@@ -105,12 +94,7 @@ def find_letters(word_image):
          else:
             roi = canvas[y:y + h, x:x + w]
             roiriginal = word_image[y:y + h, x:x + w]
-         try:
-            roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-         except:
-            pass
          roi = draw_white_cells(roiriginal, roi)
-         # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
 
          img_b = np.pad(roi, pad_width=10, mode='constant', constant_values=255)
          letterInfo = charInfo(img_b, roi.shape[0])
