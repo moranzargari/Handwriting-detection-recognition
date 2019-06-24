@@ -36,6 +36,7 @@ lbl_output = tk.Label(root, text=": פלט (טקסט מוקלד)", font=("Helvet
 lbl_output.place(x=700, y=68, anchor=NE)
 
 area = Text(root, height=30.1, width=67, font='david',borderwidth=0.5, relief="solid")
+area.tag_configure('tag-right', justify='right')
 area.place(x =400, y =400, anchor="center")
 
 save_btn = Button(root, text="TXT שמור כקובץ ", state="disable", style='my.TButton')
@@ -56,7 +57,8 @@ myvar.place(relx=.5, x=400, y=400, anchor="center")
 def convert_to_text(imageToConvert):
     area.delete('1.0', END)
     imageToConvert = np.asarray(imageToConvert)
-    area.insert(tk.END, convertImg.convert_the_image(imageToConvert))
+    imageToConvert = cv2.cvtColor(imageToConvert, cv2.COLOR_BGR2GRAY)
+    area.insert(tk.END, convertImg.convert_the_image(imageToConvert), 'tag-right')
     save_btn['state'] = "enable"
     save_btn['command'] = lambda: save_txt()
 
