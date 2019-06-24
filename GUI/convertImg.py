@@ -59,10 +59,6 @@ def convert_the_image(original):
 
 def sumPixels_stage(original):
     copy_img = original.copy()
-    try:
-        copy_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-    except:
-        pass
     ret, thresh = cv2.threshold(copy_img, 127, 255, cv2.THRESH_BINARY_INV)
 
     # init - size_flg check if the image need resize
