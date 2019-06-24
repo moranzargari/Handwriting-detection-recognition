@@ -1,4 +1,4 @@
-# Handwriting detection & recognition
+# Hebrew Handwriting detection & recognition
 ###### This program is being developed as part of 4th year final project at the software engeneering department at [Azrieli College of Engineering, jerusalem, Israel](https://english.jce.ac.il/).
 
 <br/>
