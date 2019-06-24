@@ -66,8 +66,12 @@ def convert_to_text(imageToConvert):
     """
     area.delete('1.0', END)
     imageToConvert = np.asarray(imageToConvert)
+    result_img = imageToConvert.copy()
     imageToConvert = cv2.cvtColor(imageToConvert, cv2.COLOR_BGR2GRAY)
-    area.insert(tk.END, convertImg.convert_the_image(imageToConvert), 'tag-right')
+    ouput_text, result_img = convertImg.convert_the_image(imageToConvert, result_img)
+    area.insert(tk.END, ouput_text, 'tag-right')
+    result_img = Image.fromarray(result_img)
+    add_image_to_convert(result_img)
     save_btn['state'] = "enable"
     save_btn['command'] = lambda: save_txt()
 
