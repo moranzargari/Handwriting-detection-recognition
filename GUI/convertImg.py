@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def convert_the_image(original):
+def convert_the_image(original, result_img):
     # first lets load the 2 models we have for efficiency
     # classifier_img will be the classifier that decide if the img contain a letter or not.
     # classifier_letters be the classifier that decide which letter it is
@@ -20,8 +20,9 @@ def convert_the_image(original):
     output_text = ""
     flag = 0  # flag for כ
     for i, line in enumerate(lines_images):
-        words = Dynamic_dilation.dynamicDilation(line)
+        words = Dynamic_dilation.dynamicDilation(line.img)
         for j, word in enumerate(words):
+            result_img = cv2.rectangle(result_img, (word.left_bound, line.upper_bound), (word.right_bound, line.lower_bound), (255, 0, 0), 2) # draw the rectangle borders
             letters = FindConturs.find_letters(word.roi)
             end_of_list = 0
             for k, letter in enumerate(letters):
@@ -54,7 +55,7 @@ def convert_the_image(original):
     #     cv2.imshow(str(i), word)
     #     cv2.waitKey(0)
     print(output_text)
-    return output_text
+    return output_text, result_img
 
 
 def sumPixels_stage(original):
