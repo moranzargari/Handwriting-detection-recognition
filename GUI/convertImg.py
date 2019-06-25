@@ -2,8 +2,7 @@ import sumPixels
 import cv2
 import Dynamic_dilation
 import Prediction
-import FindConturs
-import matplotlib.pyplot as plt
+import FindLetters
 import numpy as np
 
 
@@ -23,7 +22,7 @@ def convert_the_image(original, result_img):
         words = Dynamic_dilation.dynamicDilation(line.img)
         for j, word in enumerate(words):
             result_img = cv2.rectangle(result_img, (word.left_bound, line.upper_bound), (word.right_bound, line.lower_bound), (255, 0, 0), 2) # draw the rectangle borders
-            letters = FindConturs.find_letters(word.roi)
+            letters = FindLetters.find_letters(word.roi)
             end_of_list = 0
             for k, letter in enumerate(letters):
                 if k == len(letters) - 1:
