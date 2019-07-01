@@ -37,9 +37,9 @@ lbl_output = tk.Label(root, text=": פלט (טקסט מוקלד)", font=("Helvet
 lbl_output.place(x=700, y=68, anchor=NE)
 
 # text area for the output text
-area = Text(root, height=30.1, width=67, font='david',borderwidth=0.5, relief="solid")
+area = Text(root, height=30.1, width=67, font='david', borderwidth=0.5, relief="solid")
 area.tag_configure('tag-right', justify='right')
-area.place(x =400, y =400, anchor="center")
+area.place(x=400, y=400, anchor="center")
 
 # this button will offer the user to save the output text to txt file
 save_btn = Button(root, text="TXT שמור כקובץ ", state="disable", style='my.TButton')
@@ -66,6 +66,7 @@ def convert_to_text(imageToConvert):
     """
     area.delete('1.0', END)
     imageToConvert = np.asarray(imageToConvert)
+    # this copy is for creating the result image with the rectangle around each word
     result_img = imageToConvert.copy()
     imageToConvert = cv2.cvtColor(imageToConvert, cv2.COLOR_BGR2GRAY)
     ouput_text, result_img = convertImg.convert_the_image(imageToConvert, result_img)
