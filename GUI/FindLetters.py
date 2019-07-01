@@ -4,6 +4,17 @@ import numpy as np
 
 
 def union_left_ctr(cur_ctr, next_ctr,canvas):
+   """
+      the method main job is to combine 2 conturs to 1.
+      some letters in hebrew are consists of two parts, those 2 parts must be together
+      so that the network will classify the right word .
+      example : "ש"  "ז"
+   :param cur_ctr: first part of the word as contur
+   :param next_ctr: second part of the word as contur
+   :param canvas: the letters locations
+   :return: the right action to preform
+   """
+
    xtemp = cur_ctr.x_start - 3
    ytemp = cur_ctr.y_end - 1
 
@@ -19,6 +30,13 @@ def union_left_ctr(cur_ctr, next_ctr,canvas):
 
 
 def draw_white_cells(roiriginal, roi):
+   """
+      the function main job is to erase noise around the letter, the noise could be a part of the
+      next letter in the word. we want to delete the noise to help the classifier decide.
+   :param roiriginal: getting an image with a handwritten letter
+   :param roi: getting an image with a handwritten letter
+   :return: the image without the noise
+   """
    roi_temp= roiriginal.copy()
    for k in range(roi_temp.shape[0]):
       for j in range(roi_temp.shape[1]):
@@ -26,11 +44,17 @@ def draw_white_cells(roiriginal, roi):
             roi_temp[k][j] = 255
    return roi_temp
 
+
+
 def find_letters(word_image):
-
-
-   # cv2.imshow("kkkk", word_image)
-   # cv2.waitKey(0)
+   """
+      this function is the main function in this algorithm,
+      the function cut each letter from the word image by using findconturs function
+      each contur is part of the word image that contain a letter.
+      also the function is handling few cases to get each letter without a noise around.
+   :param word_image: the word image
+   :return: a list of objects , each object contain the letter image and info about the image
+   """
 
    if word_image.shape[0] < 40:
       word_image = cv2.resize(word_image, (word_image.shape[1] * 2, word_image.shape[0] * 2))
@@ -71,7 +95,6 @@ def find_letters(word_image):
    length = len(new_ctr)
 
    i = 0
-   kernel = np.ones((3, 3), np.uint8)
    while i < length:
       x, y, w, h = cv2.boundingRect(sorted_ctrs[i])
 
