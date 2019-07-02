@@ -2,7 +2,9 @@ import cv2
 import numpy as np
 
 
-
+"""
+    Right now we have the height of the line, we want to attach to the object and achieve the height of the word
+"""
 def attach(roi):
     word = roi.copy()
     ret, thresh = cv2.threshold(word, 109, 255, cv2.THRESH_BINARY_INV)
@@ -15,9 +17,12 @@ def attach(roi):
     return h
 
 
-
+"""
+    In this function we will perform dilation dynamically
+    In each iteration, we count how many contours we have, and perform dilation.
+    When there is no change between iterations, we will know that we have reached the words
+"""
 def dynamicDilation(original):
-
     flg_size = 0
     # fitting image size
     if original.shape[0] < 40:
@@ -30,10 +35,9 @@ def dynamicDilation(original):
 
 
     ####################################################################
-    # proccessing the image first
-    # copy image
+    # processing the image first
     new_image = original.copy()
-    new_image = new_image[int(H * 0.1):int(H * 0.8), :]
+    new_image = new_image[int(H * 0.1):int(H * 0.8), :]  # Cutting margins
 
     # binary
     ret, thresh = cv2.threshold(new_image, 109, 255, cv2.THRESH_BINARY_INV)
@@ -65,7 +69,7 @@ def dynamicDilation(original):
     kernel = np.ones((1, 2), np.float32)
     num_iterations = 4
     i = 0
-
+    max_iterations = 10
     # dynamic dilation loop
     while abs(prev - len(ctrs)) > 0 or startnum == len(ctrs):
         prev = len(ctrs)
@@ -81,16 +85,20 @@ def dynamicDilation(original):
                 num_iterations -= 1
         if num_iterations < 1:
             num_iterations = 1
-        if i == 10:
+        if i == max_iterations:  # Stop conditions - maximum number of iterations
             break
         i += 1
 
 
     ####################################################################
-    # sort contours = sort the word
     sorted_ctrs = sorted(ctrs_prev, key=lambda ctr: cv2.boundingRect(ctr)[0], reverse=True)
-    line_words = list()
+    line_words = list()  # list of Words (Objects)
 
+    """
+        Object of word:
+        This object contains the part of the image that is a word, 
+        and the locations of the same word in the original image 
+    """
     class word_obj:
         def __init__(self, hight, roi, left_bound, right_bound):
             self.hight = hight
@@ -113,18 +121,9 @@ def dynamicDilation(original):
             wordObject = word_obj(hight, roi, x // 2, (x + w) // 2)
         else:
             wordObject = word_obj(hight, roi,  x * 2, (x + w) * 2)
-        line_words.append(wordObject)
+        line_words.append(wordObject)  # insert Word to list
         # show ROI
         # cv2.imshow('segment no:' + str(i), new_roi)
         # # cv2.rectangle(image, (x, y), (x + w, y + h), (90, 0, 255), 2)
         # cv2.waitKey(0)
     return line_words
-
-
-
-
-
-# cv2.imshow('marked areas', image)
-# cv2.waitKey(0)
-#
-# cv2.imwrite("roi/'words.png", image)
