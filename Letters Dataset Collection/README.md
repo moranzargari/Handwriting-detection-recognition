@@ -1,7 +1,5 @@
 # Hebrew letters dataset:
-Building a handwritten Hebrew letters dataset is one of the stages in the project planning.
-At this stage we would like to recognize the letters that we detected, and to do so, we will need a set of letters written in Hebrew.
-First, we conducted a thorough search for Hebrew alphabet on the network, and also we looked for this kind of database in national libraries. Unfortunately, we were unable to locate this type of letter dataset. So we decided to build such a dataset ourselves.
+Building a handwritten Hebrew letters dataset is one of the stages in the project planning. At this stage we would like to recognize the letters that we detected and to do so, we will need a set of letters written in Hebrew. First, we conducted a thorough search for the Hebrew alphabet on the network, and also we looked for this kind of database in national libraries. Unfortunately, we were unable to locate this type of letter dataset. So we decided to build such a dataset ourselves.
 
 
 ## The dataset building blocks:
