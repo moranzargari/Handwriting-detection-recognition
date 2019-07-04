@@ -26,4 +26,4 @@ The project will be divided into two main parts: detection and recognition. The 
 ### Recognition stage
 * [Neural Network](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/Neural%20Network)
 ### User Interface
-* [GUI](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/GUI)
+* [Application](https://github.com/moranzargari/Handwriting-detection-recognition/tree/master/GUI)
